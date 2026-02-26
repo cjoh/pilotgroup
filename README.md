@@ -7,7 +7,7 @@ Generate named cohorts of realistic personas, run them through your content (doc
 ## Install
 
 ```
-claude plugins:add-marketplace /path/to/pilotgroup
+claude plugins:add-marketplace https://github.com/cjoh/pilotgroup
 claude plugins:install pilot-group@pilotgroup
 ```
 
