@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pilot Group Report — {{REPORT_TITLE}}</title>
+<style>
+  :root {
+    --accent: #1d4486;
+    --accent-light: #e8eef7;
+    --green: #2d8a4e;
+    --yellow: #b8860b;
+    --red: #c0392b;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--gray-900);
+    background: var(--gray-50);
+    line-height: 1.6;
+    padding: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    background: var(--accent);
+    color: white;
+    border-radius: var(--radius);
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-md);
+  }
+
+  .score-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 4px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .score-circle .score {
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .score-circle .out-of {
+    font-size: 0.8rem;
+    opacity: 0.8;
+  }
+
+  .header-text h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .header-text .meta {
+    font-size: 0.85rem;
+    opacity: 0.85;
+  }
+
+  /* Cards */
+  .card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .card h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent-light);
+  }
+
+  /* Score Table */
+  .score-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .score-table th {
+    text-align: left;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gray-500);
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .score-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 0.9rem;
+  }
+
+  .score-bar-cell { width: 40%; }
+
+  .score-bar-track {
+    background: var(--gray-100);
+    border-radius: 4px;
+    height: 20px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    min-width: 30px;
+  }
+
+  .score-bar-fill.high { background: var(--green); }
+  .score-bar-fill.medium { background: var(--yellow); }
+  .score-bar-fill.low { background: var(--red); }
+
+  .trend-up { color: var(--green); font-weight: 600; }
+  .trend-down { color: var(--red); font-weight: 600; }
+  .trend-same { color: var(--gray-500); }
+
+  /* Pain Points */
+  .pain-point {
+    border-left: 4px solid var(--gray-300);
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+    background: var(--gray-50);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+
+  .pain-point.high { border-left-color: var(--red); }
+  .pain-point.medium { border-left-color: var(--yellow); }
+  .pain-point.low { border-left-color: var(--green); }
+
+  .pain-point .severity {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .pain-point.high .severity { color: var(--red); }
+  .pain-point.medium .severity { color: var(--yellow); }
+  .pain-point.low .severity { color: var(--green); }
+
+  .pain-point .description { font-size: 0.9rem; }
+  .pain-point .personas {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    margin-top: 0.25rem;
+  }
+
+  /* Persona Details */
+  details.persona-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+  }
+
+  details.persona-card summary {
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: 500;
+    list-style: none;
+  }
+
+  details.persona-card summary::-webkit-details-marker { display: none; }
+  details.persona-card summary::before {
+    content: "\25B6";
+    font-size: 0.7rem;
+    color: var(--gray-500);
+    transition: transform 0.2s;
+  }
+
+  details.persona-card[open] summary::before {
+    transform: rotate(90deg);
+  }
+
+  .persona-score-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .persona-score-badge.high { background: var(--green); }
+  .persona-score-badge.medium { background: var(--yellow); }
+  .persona-score-badge.low { background: var(--red); }
+
+  .persona-detail-body {
+    padding: 0 1.5rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .persona-detail-body h4 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--gray-500);
+    margin: 1rem 0 0.4rem;
+  }
+
+  .persona-detail-body h4:first-child { margin-top: 0; }
+
+  .persona-detail-body ul {
+    margin-left: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .persona-detail-body li { margin-bottom: 0.25rem; }
+
+  blockquote {
+    border-left: 3px solid var(--accent-light);
+    padding: 0.5rem 1rem;
+    margin: 0.5rem 0;
+    color: var(--gray-700);
+    font-style: italic;
+    background: var(--gray-50);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+
+  /* Patterns */
+  .pattern-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+
+  .pattern-item:last-child { border-bottom: none; }
+
+  .pattern-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .pattern-detail {
+    font-size: 0.85rem;
+    color: var(--gray-700);
+    margin-top: 0.25rem;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gray-200);
+  }
+
+  /* Print */
+  @media print {
+    body { padding: 0; background: white; max-width: 100%; }
+    .header { break-inside: avoid; }
+    .card { break-inside: avoid; box-shadow: none; border: 1px solid var(--gray-200); }
+    details.persona-card { break-inside: avoid; box-shadow: none; border: 1px solid var(--gray-200); }
+    details.persona-card[open] summary::before { content: ""; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER: Replace {{OVERALL_SCORE}}, {{REPORT_TITLE}}, {{META}} -->
+<div class="header">
+  <div class="score-circle">
+    <div>
+      <div class="score">{{OVERALL_SCORE}}</div>
+      <div class="out-of">/10</div>
+    </div>
+  </div>
+  <div class="header-text">
+    <h1>{{REPORT_TITLE}}</h1>
+    <div class="meta">{{META}}</div>
+  </div>
+</div>
+
+<!-- SCORE TABLE: Replace {{SCORE_ROWS}} with <tr> rows -->
+<div class="card">
+  <h2>Cohort Scores</h2>
+  <table class="score-table">
+    <thead>
+      <tr>
+        <th>Persona</th>
+        <th>Score</th>
+        <th class="score-bar-cell">Distribution</th>
+        <th>Trend</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{SCORE_ROWS}}
+    </tbody>
+  </table>
+</div>
+
+<!-- WHAT LANDED: Replace {{HIGHLIGHTS}} -->
+<div class="card">
+  <h2>What Landed</h2>
+  {{HIGHLIGHTS}}
+</div>
+
+<!-- PAIN POINTS: Replace {{PAIN_POINTS}} -->
+<div class="card">
+  <h2>Pain Points by Priority</h2>
+  {{PAIN_POINTS}}
+</div>
+
+<!-- PERSONA DETAILS: Replace {{PERSONA_DETAILS}} with <details> elements -->
+<h2 style="font-size:1.1rem; color:var(--accent); margin-bottom:1rem;">Persona Details</h2>
+{{PERSONA_DETAILS}}
+
+<!-- CROSS-COHORT PATTERNS: Replace {{PATTERNS}} -->
+<div class="card">
+  <h2>Cross-Cohort Patterns</h2>
+  {{PATTERNS}}
+</div>
+
+<!-- NEXT STEPS: Replace {{NEXT_STEPS}} -->
+<div class="card">
+  <h2>Recommended Next Steps</h2>
+  {{NEXT_STEPS}}
+</div>
+
+<div class="footer">
+  Generated by Pilot Group Plugin &mdash; {{TIMESTAMP}}
+</div>
+
+</body>
+</html>

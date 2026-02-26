@@ -1,0 +1,23 @@
+{
+  "name": "pilotgroup",
+  "owner": {
+    "name": "cjoh",
+    "url": "https://github.com/cjoh"
+  },
+  "metadata": {
+    "description": "Generate diverse persona cohorts, simulate their experience with any content, and get comparative satisfaction reports.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "pilot-group",
+      "description": "Generate diverse persona cohorts, simulate their experience with any content, and get comparative satisfaction reports.",
+      "version": "1.0.0",
+      "author": {
+        "name": "cjoh"
+      },
+      "tags": ["personas", "simulation", "user-research", "satisfaction"],
+      "source": "./plugins/pilot-group"
+    }
+  ]
+}
