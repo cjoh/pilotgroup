@@ -6,9 +6,19 @@ Generate named cohorts of realistic personas, run them through your content (doc
 
 ## Install
 
+### Claude Code (plugin)
+
 ```
 claude plugins:add-marketplace https://github.com/cjoh/pilotgroup
 claude plugins:install pilot-group@pilotgroup
+```
+
+### Codex (skill)
+
+Copy the `codex-skills/pilot-group/` directory into your project's `.codex/skills/` folder:
+
+```
+cp -r codex-skills/pilot-group/ .codex/skills/pilot-group/
 ```
 
 ## Usage
